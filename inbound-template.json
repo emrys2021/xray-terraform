@@ -1,0 +1,50 @@
+{
+  "settings": {
+    "clients": [
+      {
+        "id": "{{UUID}}",
+        "email": "default@xray.com",
+        "flow": "",
+        "fingerprint": "chrome",
+        "total": 0,
+        "expiryTime": 0
+      }
+    ],
+    "decryption": "none",
+    "fallbacks": []
+  },
+  "stream_settings": {
+    "network": "ws",
+    "security": "tls",
+    "tlsSettings": {
+      "serverName": "{{DOMAIN}}",
+      "minVersion": "1.2",
+      "maxVersion": "1.3",
+      "cipherSuites": "",
+      "certificates": [
+        {
+          "ocspStapling": 36000,
+          "certificateFile": "/data/v2ray.crt",
+          "keyFile": "/data/v2ray.key"
+        }
+      ],
+      "alpn": [
+        "h2",
+        "http/1.1"
+      ]
+    },
+    "wsSettings": {
+      "path": "{{PATH}}",
+      "headers": {},
+      "acceptProxyProtocol": false
+    }
+  },
+  "sniffing": {
+    "enabled": true,
+    "destOverride": [
+      "http",
+      "tls",
+      "quic"
+    ]
+  }
+}

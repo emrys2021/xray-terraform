@@ -1,0 +1,46 @@
+#cloud-config
+package_update: true
+packages:
+  - expect
+write_files:
+  - path: /root/xray_install.expect
+    permissions: "0755"
+    content: |
+      #!/usr/bin/expect -f
+      set timeout 1200
+
+      log_file /root/expect.log
+
+      ### 启动x-ui脚本
+      spawn bash /root/x-ui.sh
+
+      # 输入域名
+      expect "并输入域名信息"
+      send "${node_name}.${domain}\r"
+
+      # 等待到账号密码配置提示，期间如出现DNS IP不匹配提示则自动确认继续
+      expect {
+          "不匹配，是否继续安装" { send "y\r"; exp_continue }
+          "确认是否继续"
+      }
+      send "y\r"
+
+      # 账户名（回车使用默认值 v2ray）
+      expect "请设置您的账户名"
+      send "\r"
+
+      # 密码（回车使用默认值 v2ray123$$）
+      expect "请设置您的账户密码"
+      send "\r"
+
+      # 面板端口（回车使用默认值 6357）
+      expect "请设置面板访问端口"
+      send "\r"
+
+      expect eof
+
+runcmd:
+  - cd /root/
+  - wget -N --no-check-certificate -q -O x-ui.sh "https://raw.githubusercontent.com/emrys2021/xray-terraform/refs/heads/main/x-ui.sh"
+  - chmod +x x-ui.sh
+  - /usr/bin/expect xray_install.expect
